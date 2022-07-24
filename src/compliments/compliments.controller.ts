@@ -23,7 +23,7 @@ export class ComplimentsController {
 
     return response
       .status(201)
-      .send({ message: 'New compliment added to the list successfully!', uid });
+      .send({ message: 'Compliment added to the list successfully!', uid });
   }
 
   @Get()
