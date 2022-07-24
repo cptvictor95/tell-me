@@ -1,7 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { ComplimentsController } from './compliments.controller';
 import { ComplimentsService } from './compliments.service';
-import { Compliment } from './interfaces/compliment.interface';
 
 describe('ComplimentsController', () => {
   let complimentsController: ComplimentsController;
