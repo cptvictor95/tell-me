@@ -8,6 +8,8 @@ import { Compliment } from './compliments/compliment.entity';
 import { ComplimentsModule } from './compliments/compliments.module';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
+import { InsultsModule } from './insults/insults.module';
+import { Insult } from './insults/insults.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,11 +22,12 @@ import { UsersModule } from './users/users.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Compliment],
+      entities: [User, Compliment, Insult],
       synchronize: true,
     }),
     UsersModule,
     ComplimentsModule,
+    InsultsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
