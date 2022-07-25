@@ -1,39 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { Compliment } from 'src/compliments/interfaces/compliment.interface';
-import * as fs from 'fs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Compliment } from './compliment.entity';
 
 @Injectable()
 export class ComplimentsService {
-  private readonly compliments: Compliment[];
-
-  constructor() {
-    const complimentsFile = fs.readFileSync(
-      './src/compliments/data/compliments.json',
-      'utf-8',
-    );
-    const parsedCompliments = JSON.parse(complimentsFile);
-
-    this.compliments = parsedCompliments;
-  }
+  constructor(
+    @InjectRepository(Compliment)
+    private complimentsRepository: Repository<Compliment>,
+  ) {}
 
   create(compliment: Compliment) {
-    this.compliments.push(compliment);
+    const result = this.complimentsRepository.save(compliment);
 
-    // overwrites compliments data file with new data
-    fs.writeFileSync(
-      './src/compliments/data/compliments.json',
-      JSON.stringify(this.compliments),
-    );
+    return result;
   }
 
-  getAll(): Compliment[] {
-    return this.compliments;
+  findAll(): Promise<Compliment[]> {
+    return this.complimentsRepository.find();
   }
 
-  getRandom(): Compliment {
-    const randomIndex = Math.floor(Math.random() * this.compliments.length);
-    const randomCompliment: Compliment = this.compliments[randomIndex];
-
-    return randomCompliment;
+  findById(id: string): Promise<Compliment> {
+    return this.complimentsRepository.findOneBy({ id });
   }
 }

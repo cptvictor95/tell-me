@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
-import { v4 } from 'uuid';
-import { CreateComplimentDTO } from 'src/compliments/dto/CreateCompliment';
-import { Compliment } from 'src/compliments/interfaces/compliment.interface';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { CreateComplimentDTO } from 'src/compliments/dto/createCompliment.dto';
 import { ComplimentsService } from './compliments.service';
 import { Response } from 'express';
+import { Compliment } from './compliment.entity';
 
 @Controller('compliments')
 export class ComplimentsController {
@@ -14,32 +13,24 @@ export class ComplimentsController {
     @Body() createComplimentDto: CreateComplimentDTO,
     @Res() response: Response,
   ) {
-    const uid = v4();
-    const newComplement = {
-      uid,
-      content: createComplimentDto.content,
-    };
-    this.complimentsService.create(newComplement);
+    this.complimentsService.create(createComplimentDto);
 
     return response
       .status(201)
-      .send({ message: 'Compliment added to the list successfully!', uid });
+      .send({ message: 'Compliment added to the list successfully!' });
   }
 
   @Get()
-  getAll(): string {
-    const compliments: Compliment[] = this.complimentsService.getAll();
+  getAll(): Promise<Compliment[]> {
+    const compliments = this.complimentsService.findAll();
 
-    return `<h1>Full list of compliments</h1>\n<ul>${compliments.map(
-      (compliment) =>
-        `<li><p>${compliment.uid}</p><p>${compliment.content}</p></li>`,
-    )}</ul>`;
+    return compliments;
   }
 
-  @Get('random')
-  getRandomCompliment(): string {
-    const randomCompliment = this.complimentsService.getRandom();
+  @Get(':id')
+  getComplimentById(@Param('id') id: string) {
+    const compliment = this.complimentsService.findById(id);
 
-    return randomCompliment.content;
+    return compliment;
   }
 }

@@ -12,9 +12,9 @@ export class UsersService {
   ) {}
 
   create(user: CreateUserDTO): Promise<CreateUserDTO & User> {
-    const response = this.usersRepository.save(user);
+    const result = this.usersRepository.save(user);
 
-    return response;
+    return result;
   }
 
   findAll(): Promise<User[]> {
